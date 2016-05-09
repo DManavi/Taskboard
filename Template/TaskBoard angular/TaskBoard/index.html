@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <meta name="viewport" content="user-scalable=no width=device-width initial-scale=1 maximum-scale=1">
+
+    <link href="./libs/Materialize/dist/css/materialize.css" rel="stylesheet">
+    <link href="./libs/animate.css/animate.css" rel="stylesheet">
+    <link href="./libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="./libs/mdi/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="./css/custom.css" rel="stylesheet">
+
+    <script type="text/javascript" src="./libs/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="./libs/Materialize/dist/js/materialize.min.js"></script>
+
+    <!-- angular resource -->
+    <script src="libs/angular.js"></script>
+    <script src="libs/angular-animate.js"></script>
+    <script src="libs/angular-cookies.js"></script>
+    <script src="libs/angular-sanitize.js"></script>
+    <script src="libs/angular-messages.js"></script>
+    <script src="libs/angular-resource.js"></script>
+    <script src="libs/angular-ui-router.js"></script>
+    <script src="libs/angular-materialize.js"></script>
+
+    <!-- app -->
+    <script src="app.js"></script>
+    <script src="controllers/dashboard.js"></script>
+    <script src="services/apiAccount.js"></script>
+</head>
+<body class="index">
+
+    <div ui-view></div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal modal-fixed-footer" dir="rtl">
+        <div class="modal-content">
+            <h4>ویرایش لیست وظایف</h4>
+            <div class="row">
+                <div class="input-field ">
+                    <input placeholder="" id="first_name" type="text" class="validate">
+                    <label for="first_name">عنوان</label>
+                </div>
+            </div>
+            <div class="row">
+                <label style="margin-right: 2rem" for="dt">تاریخ</label>
+                <input type="date" id="dt" class="datepicker">
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green left teal white-text">تایید</a>
+        </div>
+    </div>
+    <div id="modal2" class="modal modal-fixed-footer" dir="rtl">
+        <div class="modal-content">
+            <h4>ویرایش عنوان لیست وظایف</h4>
+            <div class="row">
+                <div class="input-field ">
+                    <input placeholder="" id="title" type="text" class="validate">
+                    <label for="title">عنوان</label>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close left waves-effect waves-green teal white-text">تایید</a>
+        </div>
+    </div>
+    <div id="modal3" class="modal modal-fixed-footer" dir="rtl">
+
+        <div class="modal-content">
+            <i class="fa white-text grey fa-camera "></i>
+            <div class="row teal ">
+                <img class="left responsive-img circle" src="./img/1451456913_brodie.jpg">
+
+
+            </div>
+            <div class="row ">
+
+
+                <div class="input-field ">
+                    <input placeholder="" id="title1" type="text" class="validate">
+                    <label for="title1">نام</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field ">
+                    <input placeholder="" id="title2" type="text" class="validate">
+                    <label for="title2">نام خانوادگی</label>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect left waves-green teal white-text">تایید</a>
+        </div>
+    </div>
+    <div id="modal4" class="modal modal-fixed-footer" dir="rtl">
+        <div class="modal-content">
+            <h4>تغییر گذرواژه</h4>
+            <div class="row">
+                <div class="input-field ">
+                    <input placeholder="" id="title4" type="password" class="validate">
+                    <label for="title4">گذرواژه فعلی</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field ">
+                    <input placeholder="" id="title5" type="password" class="validate">
+                    <label for="title5">گذرواژه جدید</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field ">
+                    <input placeholder="" id="title6" type="password" class="validate">
+                    <label for="title6">تکرار گذرواژه جدید</label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green teal left white-text">تایید</a>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function(){
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal-trigger').leanModal();
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15 // Creates a dropdown of 15 years to control year
+        });
+
+    });
+    </script>
+</body>
+</html>

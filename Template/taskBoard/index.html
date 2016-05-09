@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <meta name="viewport" content="user-scalable=no width=device-width initial-scale=1 maximum-scale=1">
+
+    <link href="./bower_components/Materialize/dist/css/materialize.css" rel="stylesheet">
+
+    <link href="./bower_components/animate.css/animate.css" rel="stylesheet">
+    <link href="./bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="./bower_components/mdi/css/materialdesignicons.min.css" rel="stylesheet">
+
+    <link href="./css/custom.css" rel="stylesheet">
+</head>
+<body class="index">
+<nav class="teal fixed ">
+    <div class="nav-wrapper">
+        <a href="#" class="dropdown-button" data-activates='dropdown1'><img src="./img/1451456913_brodie.jpg" class="responsive-img circle"></a>
+        <ul id='dropdown1' class='dropdown-content'>
+            <li><a class="right modal-trigger" href="#modal3" >پروفایل</a></li>
+            <li><a class="right modal-trigger" href="#modal4">تغییر گذرواژه</a></li>
+            <li class="divider"></li>
+            <li><a class="right" href="#">خروج</a></li>
+        </ul>
+        <ul id="nav-mobile" class="right ">
+            <li><a href="#">لیست وظایف</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container" dir="rtl" >
+
+    <div class="row ">
+        <label class="teal-text text-lighten-2" >خرید منزل</label><a class=" edit-title modal-trigger left" href="#" ><i class="mdi edit teal-text white mdi-close"></i></a><a class="edit-title modal-trigger left" href="#modal2" ><i class="mdi edit teal-text white mdi-pencil"></i></a>
+    </div>
+
+    <hr>
+    <div class="row checked">
+        <hr class="checkpointer">
+        <div class="col l1 right custom-col" style="margin-top: 0.5rem">
+            <input type="checkbox" checked id="test5" />
+            <label for="test5" class="chkbox"> </label>
+        </div>
+        <div class="col 6 right" style="line-height:30px">
+            <label class="task">سه کیلو پیاز</label>
+        </div>
+        <div class="col 2 " style="line-height: 15px">
+            <a class="btn modal-trigger" href="#modal1"><i class="mdi mdi-pencil"></i> </a>
+            <a class="btn"><i class="mdi mdi-close"></i> </a>
+
+        </div>
+        <div class="col 3 "  >
+            <label class="date">95/03/02</label>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col l1 right custom-col">
+            <input type="checkbox" id="test6" />
+            <label for="test6" class="chkbox"> </label>
+        </div>
+        <div class="col 6 right" style="line-height: 15px">
+            <label class="task">یک کیلو برنج</label>
+        </div>
+        <div class="col 2 " style="line-height: 15px">
+            <a class="btn modal-trigger" href="#modal1"><i class="mdi mdi-pencil"></i></a>
+
+            <a class="btn"><i class="mdi mdi-close"></i> </a>
+
+        </div>
+        <div class="col 3 "  >
+            <label class="date">95/03/02</label>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col l1 right custom-col">
+            <input type="checkbox" id="test7" />
+            <label for="test7" class="chkbox"> </label>
+        </div>
+        <div class="col 6 right" style="line-height: 15px">
+            <label class="task">پنج کیلو گردو</label>
+        </div>
+        <div class="col 2 " style="line-height: 15px">
+            <a class="btn  modal-trigger" href="#modal1"><i class="mdi mdi-pencil"></i> </a>
+            <a class="btn"><i class="mdi mdi-close"></i> </a>
+
+        </div>
+        <div class="col 3 "  >
+            <label class="date">95/03/02</label>
+        </div>
+
+    </div>
+    <div class="row">
+        <ul class="pagination left">
+            <li class="waves-effect"><a href="#!"><i class="mdi mdi-chevron-right"></i></a></li>
+
+            <li class="waves-effect"><a href="#!">5</a></li>
+            <li class="waves-effect"><a href="#!">4</a></li>
+            <li class="waves-effect"><a href="#!">3</a></li>
+            <li class="waves-effect"><a href="#!">2</a></li>
+            <li class="active"><a href="#!">1</a></li>
+            <li class="disabled"><a href="#!"><i class="mdi mdi-chevron-left"></i></a></li>
+        </ul>
+    </div>
+    <hr>
+
+</div>
+
+<!-- Modal Structure -->
+<div id="modal1" class="modal modal-fixed-footer" dir="rtl">
+    <div class="modal-content">
+        <h4>ویرایش لیست وظایف</h4>
+        <div class="row">
+            <div class="input-field ">
+                <input placeholder="" id="first_name" type="text" class="validate">
+                <label for="first_name">عنوان</label>
+            </div>
+        </div>
+        <div class="row">
+            <label style="margin-right: 2rem" for="dt">تاریخ</label>
+            <input type="date" id="dt" class="datepicker">
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green left teal white-text">تایید</a>
+    </div>
+</div>
+<div id="modal2" class="modal modal-fixed-footer" dir="rtl">
+    <div class="modal-content">
+        <h4>ویرایش عنوان لیست وظایف</h4>
+        <div class="row">
+            <div class="input-field ">
+                <input placeholder="" id="title" type="text" class="validate">
+                <label for="title">عنوان</label>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close left waves-effect waves-green teal white-text">تایید</a>
+    </div>
+</div>
+<div id="modal3" class="modal modal-fixed-footer" dir="rtl">
+
+    <div class="modal-content">
+        <i class="fa white-text grey fa-camera "></i>
+        <div class="row teal ">
+               <img class="left responsive-img circle" src="./img/1451456913_brodie.jpg">
+
+
+        </div>
+        <div class="row ">
+
+
+            <div class="input-field ">
+                <input placeholder="" id="title1" type="text" class="validate">
+                <label for="title1">نام</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field ">
+                <input placeholder="" id="title2" type="text" class="validate">
+                <label for="title2">نام خانوادگی</label>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect left waves-green teal white-text">تایید</a>
+    </div>
+</div>
+
+<div id="modal4" class="modal modal-fixed-footer" dir="rtl">
+    <div class="modal-content">
+        <h4>تغییر گذرواژه</h4>
+        <div class="row">
+            <div class="input-field ">
+                <input placeholder="" id="title4" type="password" class="validate">
+                <label for="title4">گذرواژه فعلی</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field ">
+                <input placeholder="" id="title5" type="password" class="validate">
+                <label for="title5">گذرواژه جدید</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field ">
+                <input placeholder="" id="title6" type="password" class="validate">
+                <label for="title6">تکرار گذرواژه جدید</label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green teal left white-text">تایید</a>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="./bower_components/Materialize/dist/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal-trigger').leanModal();
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15 // Creates a dropdown of 15 years to control year
+        });
+
+    });
+</script>
+</body>
+</html>

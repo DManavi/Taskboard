@@ -4,243 +4,163 @@
  * User: D. Manavi
  */
 
+// start session
+session_start();
+
 require_once './core/db.php';
 
-require_once './core/authentication.php';
+require_once './core/utils.php';
 
-require_once './core/email.php';
+require_once './core/authentication.php';
 
 require_once './core/http.php';
 
 require_once './core/validator.php';
 
-// if user is guest
-if(!$user["loggedIn"]) {
+require_once './providers/account.php';
 
-    // if action defined
-    if (isset($_REQUEST['action']) && http_get_method() == 'post') {
+// if action defined
+if (isset($_REQUEST['action']) && http_get_method() == 'post') {
 
-        // invalid model flag
-        $invalidModel = false;
+    // get action from request and make it lowercase
+    $action = strtolower($_REQUEST['action']);
 
-        // check requested action
-        switch (strtolower($action)) {
+    // invalid model flag
+    $invalidModel = false;
 
-            // register
-            case "register": {
+    // check requested action
+    switch ($action) {
 
-                // extract model from body
-                $model = http_get_body();
+        // register
+        case "register": {
 
-                // validate model
-                $invalidModel = !validate_model('account-register', $model);
+            // extract model from body
+            $model = http_get_body();
 
-                // if model is valid
-                if (!$invalidModel) {
+            // validate model
+            $invalidModel = !validate_model('account-register', $model);
 
-                    // try to register account
-                    $result = account_register($model->email, $model->password);
+            // if model is valid
+            if (!$invalidModel) {
 
-                    // check register result
-                    switch ($result->status) {
+                // try to register account
+                $result = account_register($model->email, $model->password);
 
-                        // done
-                        case 0: {
+                // check register result
+                switch ($result["status"]) {
 
-                            // send HTTP 200
-                            http_response_code(200);
+                    // done
+                    case 0: {
 
-                            break;
-                        }
+                        // send HTTP 200
+                        http_response_code(200);
 
-                        // email already exist
-                        case 1: {
+                        break;
+                    }
 
-                            // send HTTP 409 (Conflict)
-                            http_response_code(409);
+                    // email already exist
+                    case 1: {
 
-                            break;
-                        }
+                        // send HTTP 409 (Conflict)
+                        http_response_code(409);
 
-                        // unknown error
-                        case 255: {
+                        break;
+                    }
 
-                            // send internal server error
-                            http_response_code(500);
-                        }
+                    // unknown error
+                    case 255: {
+
+                        // send internal server error
+                        http_response_code(500);
                     }
                 }
-
-                break;
             }
 
-            // login
-            case "login": {
-
-                // extract model from body
-                $model = http_get_body();
-
-                // validate model
-                $invalidModel = !validate_model('account-login', $model);
-
-                // if model is valid
-                if (!$invalidModel) {
-
-                    // try to login account
-                    $result = account_login($model->email, $model->password);
-
-                    // check register result
-                    switch ($result->status) {
-
-                        // done
-                        case 0: {
-
-                            // write content on the body
-                            http_set_body($result["content"]);
-
-                            // send HTTP 200
-                            http_response_code(200);
-
-                            break;
-                        }
-
-                        // not registered
-                        case 1: {
-
-                            // send HTTP 404 (Not found)
-                            http_response_code(404);
-
-                            break;
-                        }
-
-                        // invalid username/password
-                        case 2: {
-
-                            // send HTTP 403 (Invalid username/password)
-                            http_response_code(403); // forbidden
-
-                            break;
-                        }
-
-                        // unknown error
-                        case 255: {
-
-                            // send internal server error
-                            http_response_code(500);
-                        }
-                    }
-                }
-
-                break;
-            }
-
-            // forget password
-            case "forget-password": {
-
-                // extract model from body
-                $model = http_get_body();
-
-                // validate model
-                $invalidModel = !validate_model('account-forget-password', $model);
-
-                // if model is valid
-                if (!$invalidModel) {
-
-                    // try to forget password
-                    $result = account_forgetPassword($model->email);
-
-                    // check forget password result
-                    switch ($result->status) {
-
-                        // done
-                        case 0: {
-
-                            // send HTTP 200
-                            http_response_code(200);
-
-                            break;
-                        }
-
-                        // not registered
-                        case 1: {
-
-                            // send HTTP 404 (Not found)
-                            http_response_code(404);
-
-                            break;
-                        }
-
-                        // unknown error
-                        case 255: {
-
-                            // send internal server error
-                            http_response_code(500);
-                        }
-                    }
-                }
-
-                break;
-            }
-
-            // reset-password
-            case "reset-password": {
-
-                // extract model from body
-                $model = http_get_body();
-
-                // validate model
-                $invalidModel = !validate_model('account-reset-password', $model);
-
-                // if model is valid
-                if (!$invalidModel) {
-
-                    // try to reset password
-                    $result = account_reset_password($model->email, $model->token, $model->password);
-
-                    // check reset password result
-                    switch ($result->status) {
-
-                        // done
-                        case 0: {
-
-                            // send HTTP 200
-                            http_response_code(200);
-
-                            break;
-                        }
-
-                        // unknown error
-                        case 255: {
-
-                            // send internal server error
-                            http_response_code(500);
-                        }
-                    }
-                }
-
-                break;
-            }
-
-            // invalid action
-            default: {
-
-                // send bad-request
-                http_response_code(405);
-            }
+            break;
         }
 
-        // send HTTP 400 (Bad request)
-        if ($invalidModel) {
-            http_response_code(400);
-        }
-    } else {
+        // login
+        case "login": {
 
-        // method not allowed
-        http_response_code(405);
+            // extract model from body
+            $model = http_get_body();
+
+            // validate model
+            $invalidModel = !validate_model('account-login', $model);
+
+            // if model is valid
+            if (!$invalidModel) {
+
+                // try to login account
+                $result = account_login($model->email, $model->password);
+
+                // check register result
+                switch ($result["status"]) {
+
+                    // done
+                    case 0: {
+
+                        // write content on the body
+                        //http_set_body();
+
+                        // send HTTP 200
+                        http_response_code(200);
+
+                        break;
+                    }
+
+                    // invalid username/password
+                    case 1: {
+
+                        // send HTTP 403 (Invalid username/password)
+                        http_response_code(403); // forbidden
+
+                        break;
+                    }
+
+                    // unknown error
+                    case 255: {
+
+                        // send internal server error
+                        http_response_code(500);
+                    }
+                }
+            }
+
+            break;
+        }
+
+        // logout
+        case "logout": {
+
+            // logout
+            account_logout();
+
+            break;
+        }
+
+        // change password
+        case "changepassword": {
+
+
+
+            break;
+        }
+
+        // invalid action
+        default: {
+
+            // send bad-request
+            http_response_code(405);
+        }
     }
-}
-else { // already logged in
 
-    // unauthorized access
-    http_response_code(401);
+    // send HTTP 400 (Bad request)
+    if ($invalidModel) {
+        http_response_code(400);
+    }
+} else {
+
+    // method not allowed
+    http_response_code(405);
 }

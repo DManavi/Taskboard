@@ -14,28 +14,50 @@ function validate_model($fileName, $model) {
 
         case "account-register": {
 
-            $output = account_register($model);
+            $output = validate_account_register($model);
 
             break;
         }
 
         case "account-login": {
 
-            $output = account_login($model);
+            $output = validate_account_login($model);
 
             break;
         }
 
-        case "account-forget-password": {
 
-            $output = account_forget_password($model);
+        case "category-create": {
+
+            $output = validate_category_create($model);
 
             break;
         }
 
-        case "account-reset-password": {
+        case "category-update": {
 
-            $output = account_reset_password($model);
+            $output = validate_category_update($model);
+
+            break;
+        }
+
+        case "profile-update": {
+
+            $output = validate_profile_update($model);
+
+            break;
+        }
+
+        case "task-create": {
+
+            $output = validate_task_create($model);
+
+            break;
+        }
+
+        case "task-update": {
+
+            $output = validate_task_update($model);
 
             break;
         }
@@ -74,30 +96,132 @@ function validate_account_login($model) {
     return $output;
 }
 
-function validate_account_forget_password($model) {
+
+
+function validate_category_create($model) {
+
     // create output variable
     $output = false;
 
-    // if model isn't null
+    // if model filled
     if(isset($model)){
 
-        $output = (isset($model->email) && filter_var($model->email, FILTER_VALIDATE_EMAIL));
+        // check if title isn't null &&
+        $output = isset($model->title) && strlen($model->title) <= 100 && strlen($model->title) > 0;
+
+        // if parentId is present
+        if(isset($model->parentId)) {
+
+            // if parent id is number
+            $output &= is_numeric($model->parentId);
+        }
     }
 
-    // return validation result to the caller
+    // return output to the caller
     return $output;
 }
 
-function validate_account_reset_password($model) {
+function validate_category_update($model) {
+
     // create output variable
     $output = false;
 
-    // if model isn't null
+    // if model filled
     if(isset($model)){
 
-        $output = (isset($model->email) && filter_var($model->email, FILTER_VALIDATE_EMAIL)) && isset($model->token) && (isset($model->password) && ($model->password == $model->confirmPassword));
+        // check if title isn't null &&
+        $output = isset($model->id) && isset($model->title) && strlen($model->title) <= 100 && strlen($model->title) > 0;
+
+        // if parentId is present
+        if(isset($model->parentId)) {
+
+            // if parent id is number
+            $output &= is_numeric($model->parentId);
+        }
     }
 
-    // return validation result to the caller
+    // return output to the caller
+    return $output;
+}
+
+
+
+function validate_profile_update($model) {
+
+    // create output variable
+    $output = false;
+
+    // if model filled
+    if(isset($model)){
+
+        // check if title isn't null &&
+        $output = strlen($model->firstName) <= 50 && strlen($model->lastName) <= 50 && isset($model->hasImage) && is_numeric($model->hasImage);
+    }
+
+    // return output to the caller
+    return $output;
+}
+
+
+
+function validate_task_create($model) {
+
+    // create output variable
+    $output = false;
+
+    // if model filled
+    if(isset($model)){
+
+        // check if title isn't null && category id is a number
+        $output =
+            strlen($model->title) <= 100 &&
+            strlen($model->title) > 0 &&
+
+            isset($model->categoryId) &&
+            is_numeric($model->categoryId) &&
+
+            isset($model->dueDate) &&
+            utils_is_date($model->dueDate);
+
+        // if done date is set
+        if(isset($model->doneDate)) {
+
+            // validate done date
+            $output &= utils_is_date($model->doneDate);
+        }
+    }
+
+    // return output to the caller
+    return $output;
+}
+
+function validate_task_update($model) {
+
+    // create output variable
+    $output = false;
+
+    // if model filled
+    if(isset($model)){
+
+        // check if title isn't null && category id is a number
+        $output =
+            strlen($model->title) <= 100 &&
+            strlen($model->title) > 0 &&
+
+            isset($model->categoryId) &&
+            is_numeric($model->categoryId) &&
+
+            isset($model->dueDate) &&
+            utils_is_date($model->dueDate);
+
+        // if done date is set
+        if(isset($model->doneDate)) {
+
+            // validate done date
+            $output &= utils_is_date($model->doneDate);
+        }
+    }
+
+    // return output to the caller
     return $output;
 }

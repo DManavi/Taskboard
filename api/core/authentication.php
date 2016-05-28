@@ -7,7 +7,7 @@
 require_once 'utils.php';
 
 // define encryption key constant
-define('ENC_KEY', pack('H*', "bce04b7e103a0cd8b54763051cef08bc55afe029fdebae5e1d417e2ffb2300a3"));
+define('AUTH_ENC_KEY', pack('H*', "bce04b7e103a0cd8b54763051cef08bc55afe029fdebae5e1d417e2ffb2300a3"));
 
 function authentication_auto_login(){
 
@@ -17,40 +17,51 @@ function authentication_auto_login(){
         "userId" => null
     ];
 
-    // if authentication cookie found on request
-    if (isset($_COOKIE['auth'])) {
+    // if user has auth session
+    if(isset($_SESSION['auth'])) {
 
-        // get cookie content
-        $cookie = $_COOKIE['auth'];
+        // read authentication data from session
+        $user = $_SESSION['auth'];
+    }
+    else {
 
-        // decrypt token
-        $data = authentication_decrypt($cookie);
+        // if authentication cookie found on request
+        if (isset($_COOKIE['auth'])) {
 
-        // extract key/value pairs from string
-        $data = extract_key_value_pairs($data);
+            // get cookie content
+            $cookie = $_COOKIE['auth'];
 
-        // if userId exist in data
-        if(isset($data["userId"])) {
+            // decrypt token
+            $data = authentication_decrypt($cookie);
 
-            // check user existence
-            $userExist = db_select_scalar('SELECT COUNT(Id) FROM Users WHERE Id=\''.$data['userId'].'\'') == 1;
+            // extract key/value pairs from string
+            $data = extract_key_value_pairs($data);
 
-            // if userId exist in database
-            if($userExist) {
+            // if userId exist in data
+            if (isset($data["userId"])) {
 
-                // set cookie to expire after two weeks
-                setcookie('auth', $cookie, time() + 1209600); // 2x7x24x3600
+                // check user existence
+                $userExist = db_select_scalar('SELECT COUNT(Id) FROM user WHERE Id=\'' . $data['userId'] . '\'') == 1;
 
-                // set current user id
-                $user["userId"] = $data['userId'];
+                // if userId exist in database
+                if ($userExist) {
 
-                // set logged-in
-                $user["loggedIn"] = true;
-            }
-            else {
+                    // set cookie to expire after two weeks
+                    setcookie('auth', $cookie, time() + 1209600, '/', null, null, true); // 2x7x24x3600
 
-                // log current user out
-                authentication_logout();
+                    // set current user id
+                    $user["userId"] = $data['userId'];
+
+                    // set logged-in
+                    $user["loggedIn"] = true;
+
+                    // assign user in session
+                    $_SESSION['auth'] = $user;
+                } else {
+
+                    // log current user out
+                    authentication_logout();
+                }
             }
         }
     }
@@ -67,62 +78,27 @@ function authentication_login($userId) {
     ];
 
     // set cookie value
-    $cookie = authentication_encrypt( to_key_value_pair($data) );
+    $cookie = authentication_encrypt(to_key_value_pair($data));
 
     // set cookie to expire after two weeks
-    setcookie('auth', $cookie, time() + 1209600); // 2x7x24x3600
+    setcookie('auth', $cookie, time() + 1209600, '/', null, null, true); // 2x7x24x3600  (name, value, expire, path, domain, secure, httponly)
 }
 
 function authentication_logout() {
 
-    // logout
+    // remove cookie
     unset($_COOKIE['auth']);
+
+    // remove session data
+    unset($_SESSION['auth']);
 }
 
 function authentication_encrypt($plainText){
-
-    $key_size =  strlen(ENC_KEY);
-
-    # create a random IV to use with CBC encoding
-    $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-
-    # creates a cipher text compatible with AES (Rijndael block size = 128)
-    # to keep the text confidential
-    # only suitable for encoded input that never ends with value 00h
-    # (because of default zero padding)
-    $ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, ENC_KEY, $plainText, MCRYPT_MODE_CBC, $iv);
-
-    # prepend the IV for it to be available for decryption
-    $ciphertext = $iv . $ciphertext;
-
-    # encode the resulting cipher text so it can be represented by a string
-    $ciphertext_base64 = base64_encode($ciphertext);
-
-    // return encrypted text to the caller
-    return $ciphertext_base64;
+    return utils_encrypt($plainText, AUTH_ENC_KEY);
 }
 
 function authentication_decrypt($cipherText) {
-    $key_size =  strlen(ENC_KEY);
-
-    # create a random IV to use with CBC encoding
-    $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-
-    $ciphertext_dec = base64_decode($cipherText);
-
-    # retrieves the IV, iv_size should be created using mcrypt_get_iv_size()
-    $iv_dec = substr($ciphertext_dec, 0, $iv_size);
-
-    # retrieves the cipher text (everything except the $iv_size in the front)
-    $ciphertext_dec = substr($ciphertext_dec, $iv_size);
-
-    # may remove 00h valued characters from end of plain text
-    $plaintext_dec = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, ENC_KEY, $ciphertext_dec, MCRYPT_MODE_CBC, $iv_dec);
-
-    // return decrypted text to the caller
-    return $plaintext_dec;
+    return utils_decrypt($cipherText, AUTH_ENC_KEY);
 }
 
 // auto login user

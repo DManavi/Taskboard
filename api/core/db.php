@@ -5,11 +5,17 @@
  */
 
 function db_execute($query) {
+
     // get database connection
     $connection = db_get_connection();
 
     // get result
     mysqli_query($connection, $query);
+
+    if(mysqli_error($connection)) {
+
+        die(mysqli_error($connection));
+    }
 
     // return number of affected rows
     return mysqli_affected_rows($connection);
@@ -32,13 +38,15 @@ function db_select_scalar($query) {
     $result = mysqli_query($connection, $query);
 
     // fetch first row
-    $output = $result->fetch_row();
+    $output = $result->fetch_assoc();
 
     // close database connection
     db_close_database($connection);
 
+    $keys = array_keys($output);
+
     // return first cell of the row
-    return $output[0];
+    return $output[$keys[0]];
 }
 
 function db_get_connection() {

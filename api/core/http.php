@@ -39,6 +39,8 @@ function http_set_body($model) {
 
             // return content as json
             echo json_encode($model);
+
+            break;
         }
 
         // xml content encoding
@@ -46,6 +48,8 @@ function http_set_body($model) {
 
             // return content as xml
             echo $model->asXML();
+
+            break;
         }
 
         // invalid content-type

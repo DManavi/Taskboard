@@ -43,10 +43,17 @@ function db_select_scalar($query) {
     // close database connection
     db_close_database($connection);
 
-    $keys = array_keys($output);
+    if($output != null) {
+        $keys = array_keys($output);
+
+        $output = $output[$keys[0]];
+    }
+    else {
+        $output = null;
+    }
 
     // return first cell of the row
-    return $output[$keys[0]];
+    return $output;
 }
 
 function db_get_connection() {

@@ -133,8 +133,20 @@ if (isset($_REQUEST['action']) && http_get_method() == 'post') {
         // logout
         case "logout": {
 
-            // logout
-            account_logout();
+            // if user logged in
+            if($user["loggedIn"]) {
+
+                // logout
+                account_logout();
+
+                // send HTTP 200
+                http_response_code(200);
+            }
+            else { // unauthorized access
+
+                // send HTTP 404
+                http_response_code(401);
+            }
 
             break;
         }
@@ -142,7 +154,64 @@ if (isset($_REQUEST['action']) && http_get_method() == 'post') {
         // change password
         case "changepassword": {
 
+            // if user logged in
+            if($user["loggedIn"]) {
 
+                // extract model from body
+                $model = http_get_body();
+
+                // validate model
+                $invalidModel = !validate_model('account-change-password', $model);
+
+                // if model is valid
+                if (!$invalidModel) {
+
+                    // try to change account password
+                    $result = account_change_password($user['userId'], $model);
+
+                    // check register result
+                    switch ($result["status"]) {
+
+                        // done
+                        case 0: {
+
+                            // send HTTP 200
+                            http_response_code(200);
+
+                            break;
+                        }
+
+                        // invalid password
+                        case 1: {
+
+                            // send HTTP 403 (Forbidden)
+                            http_response_code(403);
+
+                            break;
+                        }
+
+                        // unknown error
+                        case 255: {
+
+                            // send internal server error
+                            http_response_code(500);
+
+                            break;
+                        }
+                    }
+                }
+                else {
+
+                    // send HTTP 400 - bad request
+                    http_response_code(400);
+                }
+
+            }
+            else { // unauthorized access
+
+                // send HTTP 404
+                http_response_code(401);
+            }
 
             break;
         }

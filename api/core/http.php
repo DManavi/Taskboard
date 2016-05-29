@@ -4,6 +4,8 @@
  * User: D. Manavi
  */
 
+header("Access-Control-Allow-Origin: *");
+
 // get HTTP request body
 function http_get_body(){
 

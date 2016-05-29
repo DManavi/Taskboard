@@ -61,6 +61,13 @@ function validate_model($fileName, $model) {
 
             break;
         }
+
+        case "account-change-password": {
+
+            $output = validate_account_change_password($model);
+
+            break;
+        }
     }
 
     // return validation result to the caller
@@ -96,6 +103,20 @@ function validate_account_login($model) {
     return $output;
 }
 
+function validate_account_change_password($model) {
+
+    // create output variable
+    $output = false;
+
+    // if model isn't null
+    if(isset($model)){
+
+        $output = isset($model->currentPassword) && (isset($model->password) && ($model->password == $model->confirmPassword));
+    }
+
+    // return validation result to the caller
+    return $output;
+}
 
 
 function validate_category_create($model) {
@@ -145,7 +166,6 @@ function validate_category_update($model) {
 }
 
 
-
 function validate_profile_update($model) {
 
     // create output variable
@@ -161,7 +181,6 @@ function validate_profile_update($model) {
     // return output to the caller
     return $output;
 }
-
 
 
 function validate_task_create($model) {

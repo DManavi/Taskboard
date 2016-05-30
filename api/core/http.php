@@ -85,12 +85,25 @@ function http_get_content_encoding() {
     return "json";
 }
 
+function http_get_origin() {
+    $headers = apache_request_headers();
+
+    foreach ($headers as $header => $value) {
+
+        if(strtolower($header) == "origin"){
+            return $value;
+        }
+    }
+}
+
 function http_get_method() {
 
     return strtolower($_SERVER['REQUEST_METHOD']);
 }
 
 $method = http_get_method();
+
+$origin = http_get_origin();
 
 if(strtolower($method) == 'options') {
 
@@ -100,10 +113,16 @@ if(strtolower($method) == 'options') {
 
     header_remove();
 
-    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Origin: ".$origin);
     header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE");
     header("Access-Control-Allow-Headers: Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control");
 
     exit;
+}
+else {
+    header("Access-Control-Allow-Origin: ".$origin);
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE");
+    header("Access-Control-Allow-Headers: Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control");
 }

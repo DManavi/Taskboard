@@ -114,7 +114,7 @@ function account_change_password($userId, $model) {
             $result = db_execute('UPDATE user SET password=\''.$password.'\' WHERE id='.$userId);
 
             // if one row affected
-            if($result == 1) {
+            if(is_numeric($result)) {
 
                 // set status to done
                 $output['status'] = 0;

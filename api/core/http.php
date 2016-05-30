@@ -4,8 +4,6 @@
  * User: D. Manavi
  */
 
-header("Access-Control-Allow-Origin: *");
-
 // get HTTP request body
 function http_get_body(){
 
@@ -81,7 +79,6 @@ function http_get_content_encoding() {
                     return "xml";
                 }
             }
-
         }
     }
 
@@ -91,4 +88,22 @@ function http_get_content_encoding() {
 function http_get_method() {
 
     return strtolower($_SERVER['REQUEST_METHOD']);
+}
+
+$method = http_get_method();
+
+if(strtolower($method) == 'options') {
+
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']) && $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] == 'GET') {
+
+    }
+
+    header_remove();
+
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE");
+    header("Access-Control-Allow-Headers: Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control");
+
+    exit;
 }

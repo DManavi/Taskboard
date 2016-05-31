@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Taskboard | Danial Manavi</title>
+    <meta name="viewport" content="user-scalable=no width=device-width initial-scale=1 maximum-scale=1">
+
+    <link href="./libs/Materialize/dist/css/materialize.css" rel="stylesheet">
+    <link href="./libs/animate.css/animate.css" rel="stylesheet">
+    <link href="./libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="./libs/mdi/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="./css/custom.css" rel="stylesheet">
+
+    <script type="text/javascript" src="./libs/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="./libs/Materialize/dist/js/materialize.min.js"></script>
+
+    <!-- angular resource -->
+    <script src="./libs/angular.js"></script>
+    <script src="./libs/angular-animate.js"></script>
+    <script src="./libs/angular-cookies.js"></script>
+    <script src="./libs/angular-sanitize.js"></script>
+    <script src="./libs/angular-messages.js"></script>
+    <script src="./libs/angular-resource.js"></script>
+    <script src="./libs/angular-ui-router.js"></script>
+    <script src="./libs/angular-materialize.js"></script>
+
+    <!-- app -->
+    <script src="./app.js"></script>
+    <script src="./controllers/changePassword.js"></script>
+    <script src="./controllers/login.js"></script>
+    <script src="./controllers/logout.js"></script>
+    <script src="./controllers/register.js"></script>
+    <script src="./controllers/dashboard.js"></script>
+    <script src="./controllers/layout.js"></script>
+    <script src="./controllers/profile.js"></script>
+    <script src="./controllers/category.js"></script>
+    <script src="./directive/validation.js"></script>
+    <script src="./services/apiAccount.js"></script>
+</head>
+<body class="{{key}} {{key == 'register' || key == 'login' ? 'teal' : ''}}">
+    <div class="fill" ui-view></div>
+</body>
+</html>

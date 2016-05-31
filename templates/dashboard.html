@@ -1,0 +1,101 @@
+﻿<!-- Modal Structure -->
+<div id="modal1" class="modal modal-fixed-footer" dir="rtl">
+    <div class="modal-content">
+        <h4>ویرایش لیست وظایف</h4>
+        <div class="row">
+            <div class="input-field ">
+                <input placeholder="" id="first_name" type="text" class="validate">
+                <label for="first_name">عنوان</label>
+            </div>
+        </div>
+        <div class="row">
+            <label style="margin-right: 2rem" for="dt">تاریخ</label>
+            <input type="date" id="dt" class="datepicker">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green left teal white-text">تایید</a>
+    </div>
+</div>
+<div id="modal2" class="modal modal-fixed-footer" dir="rtl">
+    <div class="modal-content">
+        <h4>ویرایش عنوان لیست وظایف</h4>
+        <div class="row">
+            <div class="input-field ">
+                <input placeholder="" id="title" type="text" class="validate">
+                <label for="title">عنوان</label>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close left waves-effect waves-green teal white-text">تایید</a>
+    </div>
+</div>
+
+<div class="container">
+    <div ng-repeat="category in model.categories">
+        <div class="row">
+            <label class="teal-text text-lighten-2">{{category.title}}</label>
+            <a class="edit-title left" href="#/deleteCategory/{{category.id}}">
+                <i class="mdi edit teal-text white mdi-close"></i>
+            </a>
+            <a class="edit-title left" href="#/editCategory/{{category.id}}">
+                <i class="mdi edit teal-text white mdi-pencil"></i>
+            </a>
+            <a class="edit-title left" href="#/createSubCategory/{{category.id}}" ng-show="category.subCategories.length > 0 || category.tasks.length < 1">
+                <i class="mdi edit teal-text white mdi-content-duplicate"></i>
+            </a>
+            <a class="edit-title left" href="#/createTask/{{category.id}}" ng-show="category.tasks.length > 0 || category.subCategories.length < 1">
+                <i class="mdi edit teal-text white mdi-calendar-check"></i>
+            </a>
+        </div>
+        <div class="row" ng-repeat="subCategory in category.subCategories" ng-if="category.subCategories">
+            <label class="teal-text text-lighten-2" style="margin-right: 35px;">{{subCategory.title}}</label>
+            <a class="edit-title left" href="#/deleteCategory/{{subCategory.id}}">
+                <i class="mdi edit teal-text white mdi-close"></i>
+            </a>
+            <a class="edit-title left" href="#/editCategory/{{subCategory.id}}">
+                <i class="mdi edit teal-text white mdi-pencil"></i>
+            </a>
+            <a class="edit-title left" href="#/createTask/{{subCategory.id}}">
+                <i class="mdi edit teal-text white mdi-calendar-check"></i>
+            </a>
+        </div>
+        <div class="row {{task.doneDate ? 'checked' : ''}}"
+             ng-repeat="task in category.tasks">
+            <hr class="checkpointer">
+            <div class="col l1 right custom-col" style="margin-top: 0.5rem">
+                <input type="checkbox" ng-change="alert('hi')" />
+            </div>
+            <div class="col 6 right" style="line-height:30px">
+                <label class="task">{{task.title}}</label>
+            </div>
+            <div class="col 2 " style="line-height: 15px">
+                <a class="btn" href="#/editTask/{{category.Id}}/{{task.id}}"><i class="mdi mdi-pencil"></i> </a>
+                <a class="btn" href="#/deleteTask/{{category.Id}}/{{task.id}}"><i class="mdi mdi-close"></i> </a>
+            </div>
+            <div class="col 3 ">
+                <label class="date">{{task.dueDate}}</label>
+            </div>
+        </div>
+
+        <hr />
+    </div>
+    <!--<div class="row">
+        <ul class="pagination left">
+            <li class="waves-effect"><a href="#!"><i class="mdi mdi-chevron-right"></i></a></li>
+
+            <li class="waves-effect"><a href="#!">5</a></li>
+            <li class="waves-effect"><a href="#!">4</a></li>
+            <li class="waves-effect"><a href="#!">3</a></li>
+            <li class="waves-effect"><a href="#!">2</a></li>
+            <li class="active"><a href="#!">1</a></li>
+            <li class="disabled"><a href="#!"><i class="mdi mdi-chevron-left"></i></a></li>
+        </ul>
+    </div>-->
+</div>
+
+<a class="btn btn-floating btn-large waves-effect waves-light red plus ng-scope" href="#/createCategory" style="margin-right: 30px;">
+    +
+</a>

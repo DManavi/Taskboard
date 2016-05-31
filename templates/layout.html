@@ -1,0 +1,25 @@
+<nav class="teal fixed" >
+    <div class="nav-wrapper">
+        <a href="#" class="dropdown-button left" data-activates='dropdown1' dropdown>
+            <span style="margin-left: 11px;display: inherit;float: right;">
+                {{ profile.firstName + ' ' + profile.lastName }}
+            </span>
+            <img src="{{profile.image}}" class="responsive-img circle">
+        </a>
+        <ul id='dropdown1' class='dropdown-content'>
+            <li><a class="right modal-trigger" href="#/profile">پروفایل</a></li>
+            <li><a class="right modal-trigger" href="#/changePassword">تغییر گذرواژه</a></li>
+            <li class="divider"></li>
+            <li><a class="right" href="#/logout">خروج</a></li>
+        </ul>
+        <ul id="nav-mobile" class="right ">
+            <li>
+                <a href="#">
+                    لیست وظایف
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div ui-view></div>

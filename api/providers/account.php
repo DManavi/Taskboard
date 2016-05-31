@@ -133,9 +133,10 @@ function account_change_password($userId, $model) {
 
 function account_test_login($email, $password) {
 
+
     $password = account_create_password($email, $password);
 
-    return db_select_scalar('SELECT id FROM user WHERE email=\''.$email.'\' AND password=\''.$password.'\' LIMIT 1');
+    return db_select_scalar('SELECT id FROM user WHERE email=\''.$email.'\' AND password=\''.$password.'\'');
 }
 
 function account_get_email($userId) {

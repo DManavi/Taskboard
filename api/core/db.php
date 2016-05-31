@@ -25,6 +25,8 @@ function db_select($query) {
     // get database connection
     $connection = db_get_connection();
 
+    if(!mysqli_set_charset($connection, "utf8")) { die("Failed to set charset to UTF-8"); }
+
     // execute query and return to the caller
     return mysqli_query($connection, $query);
 }

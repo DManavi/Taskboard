@@ -40,14 +40,16 @@ function authentication_auto_login(){
             // if userId exist in data
             if (isset($data["userId"])) {
 
+                $data['userId'] = intval($data['userId']);
+
                 // check user existence
-                $userExist = db_select_scalar('SELECT COUNT(Id) FROM user WHERE Id=\'' . $data['userId'] . '\'') == 1;
+                $userExist = db_select_scalar('SELECT COUNT(id) FROM user WHERE id='.$data['userId']) == 1;
 
                 // if userId exist in database
                 if ($userExist) {
 
                     // set cookie to expire after two weeks
-                    setcookie('auth', $cookie, time() + 1209600, '/', null, null, true); // 2x7x24x3600
+                    // setcookie('auth', $cookie, time() + 1209600, '/', null, null, true); // 2x7x24x3600
 
                     // set current user id
                     $user["userId"] = $data['userId'];
@@ -81,13 +83,19 @@ function authentication_login($userId) {
     $cookie = authentication_encrypt(to_key_value_pair($data));
 
     // set cookie to expire after two weeks
-    setcookie('auth', $cookie, time() + 1209600, '/', null, null, true); // 2x7x24x3600  (name, value, expire, path, domain, secure, httponly)
+    setcookie('auth', $cookie, time() + 1209600, '/', null, null, false); // 2x7x24x3600  (name, value, expire, path, domain, secure, httponly)
 }
 
 function authentication_logout() {
 
+    // set cookie to expire after two weeks
+    setcookie('auth', '', time() - 1209600, '/', null, null, false);
+
     // remove cookie
     unset($_COOKIE['auth']);
+
+    // remove PHP session id cookie
+    setcookie('PHPSESSID', '', time() - 1209600, '/', null, null, false);
 
     // remove session data
     unset($_SESSION['auth']);

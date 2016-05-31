@@ -1,0 +1,33 @@
+<div class="container valign-wrapper login profile">
+    <div class="valign">
+        <form name="form" valid-submit="update(model)" novalidate>
+            <div class="row header-text center ">
+                <label class="master-title teal-text text-lighten-4">به روز رسانی پروفایل</label>
+            </div>
+            <div class="row center ">
+                <div class="input-field col l4 offset-l4 m4 offset-m4 s4 offset-s4">
+                    <input name="firstName" ng-model="model.firstName" dir="rtl" type="text" class="white validate" placeholder="نام">
+                    <validation name="firstName"></validation>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l4 offset-l4 m4 offset-m4 s4 offset-s4">
+                    <input name="lastName" ng-model="model.lastName" dir="rtl" type="text" class="white validate" placeholder="نام خانوادگی">
+                    <validation name="lastName"></validation>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l4 offset-l4 m4 offset-m4 s4 offset-s4">
+                    <input type="file" name="file" id="file" accept="image/*" onchange="angular.element(this).scope().readImage(this)" />
+                </div>
+            </div>
+            <div class="row center">
+                <input type="button" class="waves-effect waves-light btn btn-large red accent-2" ng-click="showDashboard()" value="انصراف" />
+                &nbsp;&nbsp;&nbsp;
+                <button class="waves-effect waves-light btn btn-large teal accent-2" type="submit">
+                    ذخیره
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

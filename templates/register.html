@@ -1,0 +1,37 @@
+﻿<div class="container valign-wrapper login">
+    <div class="valign">
+        <form name="form" valid-submit="register()" novalidate>
+            <div class="row header-text center ">
+                <label class="master-title teal-text text-lighten-4">ثبت نام</label>
+            </div>
+            <div class="row center ">
+                <div class="input-field col l4 offset-l4 m4 offset-m4 s4 offset-s4">
+                    <input  name="email" ng-model="model.email" dir="rtl" placeholder="ایمیل خود را وارد کنید" type="email" class="white validate" required>
+                    <validation name="email"></validation>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l4 offset-l4 m4 offset-m4 s4 offset-s4">
+                    <input name="password" ng-model="model.password" dir="rtl" placeholder="گذرواژه خود را وارد کنید" type="password" class="white validate" required>
+                    <validation name="password"></validation>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l4 offset-l4 m4 offset-m4 s4 offset-s4">
+                    <input name="confirmPassword" ng-model="model.confirmPassword" ng-match="model.password" dir="rtl" placeholder="گذرواژه خود را مجددا وارد کنید" type="password" class="white validate" required>
+                    <validation name="confirmPassword"
+                                match="تکرار کلمه عبور با کلمه عبور یکسان نیست"></validation>
+                </div>
+            </div>
+            <div class="row center">
+                <button class="waves-effect waves-light btn btn-large red accent-1" type="submit">
+                    ثبت نام
+                </button>
+            </div>
+
+            <div class="row center">
+                <a href="#/login"> <label class="white-text ">ورود به سیستم</label></a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -38,7 +38,7 @@ function http_set_body($model) {
         case "json": {
 
             // return content as json
-            echo json_encode($model);
+            echo json_encode($model, JSON_UNESCAPED_UNICODE);
 
             break;
         }

@@ -17,6 +17,8 @@ require_once './core/http.php';
 
 require_once './core/validator.php';
 
+require_once './providers/account.php';
+
 require_once './providers/task.php';
 
 // if user is guest

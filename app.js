@@ -32,6 +32,11 @@
                     return "http://localhost:8080/taskboard/api/account.php?action=changePassword";
                 }
             },
+            dashboard: {
+                get list() {
+                    return "http://localhost:8080/taskboard/api/dashboard.php?action=read";
+                }
+            },
             category: {
                 get list() {
                     return "http://localhost:8080/taskboard/api/category.php?action=read";
@@ -48,7 +53,7 @@
             },
             task: {
                 get list() {
-                    return "http://localhost:8080/taskboard/api/task.php?action=read&id=13&pageSize=20&pageIndex=0";
+                    return "http://localhost:8080/taskboard/api/task.php?action=read";
                 },
                 get create() {
                     return "http://localhost:8080/taskboard/api/task.php?action=create";

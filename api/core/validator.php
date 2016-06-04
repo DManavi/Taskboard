@@ -82,7 +82,7 @@ function validate_account_register($model) {
     // if model isn't null
     if(isset($model)){
 
-        $output = (isset($model->email) && filter_var($model->email, FILTER_VALIDATE_EMAIL)) && (isset($model->password) && ($model->password == $model->confirmPassword));
+        $output = (isset($model->email) && filter_var($model->email, FILTER_VALIDATE_EMAIL) == $model->email) && (isset($model->password) && ($model->password == $model->confirmPassword));
     }
 
     // return validation result to the caller
@@ -96,7 +96,7 @@ function validate_account_login($model) {
     // if model isn't null
     if(isset($model)){
 
-        $output = (isset($model->email) && filter_var($model->email, FILTER_VALIDATE_EMAIL)) && isset($model->password);
+        $output = (isset($model->email) && filter_var($model->email, FILTER_VALIDATE_EMAIL) == $model->email) && isset($model->password);
     }
 
     // return validation result to the caller
@@ -193,14 +193,22 @@ function validate_task_create($model) {
 
         // check if title isn't null && category id is a number
         $output =
+            isset($model->title) && (
             strlen($model->title) <= 100 &&
-            strlen($model->title) > 0 &&
+            strlen($model->title) > 0) &&
 
-            isset($model->categoryId) &&
-            is_numeric($model->categoryId) &&
+            (isset($model->categoryId) &&
+            is_numeric($model->categoryId)) &&
 
-            isset($model->dueDate) &&
-            utils_is_date($model->dueDate);
+            (isset($model->dueDate) &&
+            utils_is_date($model->dueDate));
+
+        // if assigned to provided
+        if(isset($model->assignedTo)) {
+
+            // validate assigned to value
+            $output &= filter_var($model->assignedTo, FILTER_VALIDATE_EMAIL) == $model->assignedTo;
+        }
 
         // if done date is set
         if(isset($model->doneDate)) {
@@ -227,17 +235,28 @@ function validate_task_update($model) {
             strlen($model->title) <= 100 &&
             strlen($model->title) > 0 &&
 
-            isset($model->categoryId) &&
-            is_numeric($model->categoryId) &&
-
             isset($model->dueDate) &&
             utils_is_date($model->dueDate);
+
+        // if assigned to provided
+        if(isset($model->assignedTo)) {
+
+            // validate assigned to value
+            $output &= filter_var($model->assignedTo, FILTER_VALIDATE_EMAIL) == $model->assignedTo;
+        }
 
         // if done date is set
         if(isset($model->doneDate)) {
 
             // validate done date
             $output &= utils_is_date($model->doneDate);
+        }
+
+        // if assigned to provided
+        if(isset($model->assignedTo)) {
+
+            // validate assigned to value
+            $output &= is_numeric($model->assignedTo);
         }
     }
 

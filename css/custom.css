@@ -49,7 +49,9 @@ validation {
     color: #fff;
 }
 
-.changePassword validation, .category validation {
+.changePassword validation,
+.category validation,
+.task validation {
     color: #ff0000;
 }
 
@@ -111,7 +113,7 @@ i.mdi-check {
     font-size: 3rem;
 }
 /*index*/
-.index nav img, .changePassword nav img, .logout nav img, .profile nav img, .category nav img {
+.index nav img, .changePassword nav img, .logout nav img, .profile nav img, .category nav img, .task nav img {
     width: 3rem;
     height: 3rem;
     margin-top: 0.75rem;
@@ -126,7 +128,7 @@ i.mdi-check {
     background: inherit;
 }
 
-.index nav ul li a, .changePassword nav ul li a, .logout nav ul li a, .profile nav ul li a, .category nav ul li a {
+.index nav ul li a, .changePassword nav ul li a, .logout nav ul li a, .profile nav ul li a, .category nav ul li a, .task nav ul li a {
     font-size: 2rem;
 }
 
@@ -150,9 +152,9 @@ i.mdi-check {
     padding-right: 1rem;
 }
 
-.index .custom-col {
-    width: 2rem !important;
-}
+/*.index .custom-col {*/
+    /*width: 2rem !important;*/
+/*}*/
 
 .index label.task {
     font-size: 1.2rem;
@@ -208,11 +210,21 @@ i.mdi-check {
     border-radius: 5px;
 }
 
-.index nav ul.dropdown-content li a {
+.index nav ul.dropdown-content li a,
+.changePassword nav ul.dropdown-content li a,
+.logout nav ul.dropdown-content li a,
+.profile nav ul.dropdown-content li a,
+.category nav ul.dropdown-content li a,
+.task nav ul.dropdown-content li a {
     font-size: 1rem;
 }
 
-.index ul.dropdown-content {
+.index ul.dropdown-content,
+.changePassword ul.dropdown-content,
+.logout ul.dropdown-content,
+.profile ul.dropdown-content,
+.task ul.dropdown-content,
+.category ul.dropdown-content {
     top: 4rem !important;
     left: 1rem !important;
     width: 8rem !important;
@@ -272,4 +284,8 @@ span {
 
 #modal3 .input-field {
     margin: 4rem 2rem 0;
+}
+
+.pointer {
+    cursor: pointer;
 }

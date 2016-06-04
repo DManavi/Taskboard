@@ -21,101 +21,129 @@
 
                 // $filter('filter')(array, {id: 12})[0];
 
-                $scope.category = {
+                $http({
+                    method: "GET",
+                    url: constant.API.category.list,
+                })
+                    .success(function (data, status, headers, config) {
 
-                    list: function (model) {
-                        $http({
-                            method: "GET",
-                            url: constant.API.category.list,
-                        })
-                            .success(function (data, status, headers, config) {
+                        var parents = data.filter(function(obj) {
 
-                                var parents = data.filter(function(obj) {
+                            return !obj.parentId;
+                        });
 
-                                    return !obj.parentId;
-                                });
+                        for(var i = 0; i < parents.length; i++) {
 
-                                for(var i = 0; i < parents.length; i++) {
+                            var children = data.filter(function(obj){
+                                return obj.parentId == parents[i].id;
+                            });
 
-                                    var children = data.filter(function(obj){
-                                        return obj.parentId == parents[i].id;
-                                    });
+                            if(children.length > 0) {
 
-                                    if(children) {
-                                        parents[i].subCategories = children;
+                                parents[i].subCategories = parents[i].subCategories || [];
 
-                                        parents[i].tasks = [];
-                                    }
-                                    else {
+                                for(var j = 0; j < children.length; j++) {
 
-                                        parents[i].subCategories = [];
+                                    children[j].tasks = [];
 
-
-
-                                        parents[i].tasks = [];
-                                    }
+                                    parents[i].subCategories.push(children[j]);
                                 }
 
-                                $scope.model.categories = parents;
-                            })
-                            .error(function (data, status, headers, config) {
-                                Materialize.toast("در هنگام بار گذاری صفحه خطایی رخ داده است", 5000);
-                            });
-                    }};
+                                parents[i].tasks = [];
+                            }
+                            else {
+                                parents[i].subCategories = [];
 
-                $scope.task = {
-                    create: function (model) {
-                        $http({
-                            method: "POST",
-                            url: constant.API.task.create,
-                            data: model
-                        })
-                            .success(function (data, status, headers, config) {
+                                parents[i].tasks = [];
+                            }
+                        }
 
-                            })
-                            .error(function (data, status, headers, config) {
-                                Materialize.toast("در ایجاد وظیفه جدید خطایی رخ داده است", 5000);
-                            });
-                    },
-                    update: function (model) {
-                        $http({
-                            method: "PUT",
-                            url: constant.API.task.upddate,
-                            data: model
-                        })
-                            .success(function (data, status, headers, config) {
+                        $scope.model.categories = parents;
 
-                            })
-                            .error(function (data, status, headers, config) {
-                                Materialize.toast("در بروزرسانی وظیفه خطایی رخ داده است", 5000);
-                            });
-                    },
-                    delete: function (id) {
-                        $http({
-                            method: "DELETE",
-                            url: constant.API.task.delete + id
-                        })
-                            .success(function (data, status, headers, config) {
+                        for(var i = 0; i < $scope.model.categories.length; i++) {
 
-                            })
-                            .error(function (data, status, headers, config) {
-                                Materialize.toast("در حذف وظیفه خطایی رخ داده است", 5000);
-                            });
-                    }
+                            // assign short name
+                            var parentCategory = $scope.model.categories[i];
+
+                            // if category has sub category
+                            if(parentCategory.subCategories.length > 0) {
+
+                                // iterate all sub-categories
+                                for (var j = 0; j < parentCategory.subCategories.length; j++) {
+
+                                    // load sub-category tasks
+                                    $scope.loadTasks(parentCategory.subCategories[j]);
+                                }
+                            }
+                            else {
+
+                                // load parent category tasks
+                                $scope.loadTasks(parentCategory);
+                            }
+                        }
+                    })
+                    .error(function (data, status, headers, config) {
+                        Materialize.toast("در هنگام بار گذاری صفحه خطایی رخ داده است", 5000);
+                    });
+
+                $scope.changeState = function(task) {
+
+                    alert(task.title);
                 };
 
-                $scope.category.list();
+                $scope.loadTasks = function(category, pageIndex, pageSize) {
 
-                //$(document).ready(function () {
-                //    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-                //    $('.modal-trigger').leanModal();
-                //
-                //    $('.datepicker').pickadate({
-                //        selectMonths: true, // Creates a dropdown to control month
-                //        selectYears: 15 // Creates a dropdown of 15 years to control year
-                //    });
-                //
-                //});
+                    if(!pageSize) { pageSize = 5; }
+
+                    if(!pageIndex) { pageIndex = 0; }
+
+                    console.log(category);
+
+                    if(category.tasks.currentPage && (category.tasks.currentPage == pageIndex)) { return; }
+
+                    $http({
+                        method: "GET",
+                        url: constant.API.task.list,
+                        params: {
+                            id: category.id,
+                            pageSize: pageSize,
+                            pageIndex: pageIndex
+                        }
+                    })
+                        .success(function (data, status, headers, config) {
+
+                            for(var i = 0; i < data.items.length; i++) {
+
+                                data.items[i].dueDate = new Date(data.items[i].dueDate);
+                            }
+
+                            category.tasks = data.items;
+
+                            category.tasks.total = data.total;
+
+                            category.tasks.maxPage = parseInt(data.total / pageSize);
+
+                            if((data.total / pageSize) > category.tasks.maxPage) {
+
+                                category.tasks.maxPage++;
+                            }
+
+                            category.tasks.pages = [];
+
+                            for(var i = 0; i < category.tasks.maxPage; i++) {
+                                category.tasks.pages.push(i);
+                            }
+
+                            category.tasks.pages.reverse();
+
+                            console.log(category.tasks.pages);
+
+                            category.tasks.currentPage = pageIndex;
+                        })
+                        .error(function (data, status, headers, config) {
+                            Materialize.toast("در هنگام بار گذاری صفحه خطایی رخ داده است", 5000);
+                        });
+                };
             }
         }]);
 

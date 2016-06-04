@@ -12,8 +12,22 @@
             </div>
             <div class="row center ">
                 <div class="input-field col l4 offset-l4 m4 offset-m4 s4 offset-s4">
-                    <input name="dueDate" ng-model="model.dueDate" dir="rtl" placeholder="تاریخ" type="date" class="white validate" required>
+                    <input class="white validate"
+                           ng-model="model.dueDate"
+                           format="yyyy-mm-dd"
+                           id="date"
+                           input-date
+                           name="dueDate"
+                           required
+                           placeholder="تاریخ"
+                           type="text" />
                     <validation name="dueDate"></validation>
+                </div>
+            </div>
+            <div class="row center ">
+                <div class="input-field col l4 offset-l4 m4 offset-m4 s4 offset-s4">
+                    <input name="assignedTo" ng-model="model.assignedTo" dir="rtl" placeholder="الصاق - آدرس ایمیل"  type="email" class="white validate">
+                    <validation name="assignedTo"></validation>
                 </div>
             </div>
             <div class="row center">

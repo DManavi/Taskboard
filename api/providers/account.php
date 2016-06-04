@@ -158,6 +158,18 @@ function account_get_email($userId) {
     return $output;
 }
 
+function account_get_id($email) {
+
+    // create output variable
+    $output = null;
+
+    // find email by user id
+    $output = db_select_scalar('SELECT id FROM user WHERE email=\''.$email.'\'');
+
+    // return output to caller
+    return $output;
+}
+
 function account_create_password($email,$password) {
 
     return md5($email.$password.$email);

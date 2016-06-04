@@ -17,85 +17,124 @@
         <a href="#!" class=" modal-action modal-close waves-effect waves-green left teal white-text">تایید</a>
     </div>
 </div>
-<div id="modal2" class="modal modal-fixed-footer" dir="rtl">
-    <div class="modal-content">
-        <h4>ویرایش عنوان لیست وظایف</h4>
-        <div class="row">
-            <div class="input-field ">
-                <input placeholder="" id="title" type="text" class="validate">
-                <label for="title">عنوان</label>
-            </div>
-        </div>
 
-    </div>
-    <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close left waves-effect waves-green teal white-text">تایید</a>
-    </div>
-</div>
 
 <div class="container">
+
     <div ng-repeat="category in model.categories">
         <div class="row">
             <label class="teal-text text-lighten-2">{{category.title}}</label>
-            <a class="edit-title left" href="#/deleteCategory/{{category.id}}">
+            <a class="edit-title left" href="#/deleteCategory/{{category.id}}" title="حذف دسته بندی">
                 <i class="mdi edit teal-text white mdi-close"></i>
             </a>
-            <a class="edit-title left" href="#/editCategory/{{category.id}}">
+            <a class="edit-title left" href="#/editCategory/{{category.id}}" title="ویرایش دسته بندی">
                 <i class="mdi edit teal-text white mdi-pencil"></i>
             </a>
-            <a class="edit-title left" href="#/createSubCategory/{{category.id}}" ng-show="category.subCategories.length > 0 || category.tasks.length < 1">
+            <a class="edit-title left" href="#/createSubCategory/{{category.id}}" ng-show="category.subCategories.length > 0 || category.tasks.length < 1" title="ایجاد زیر دسته">
                 <i class="mdi edit teal-text white mdi-content-duplicate"></i>
             </a>
-            <a class="edit-title left" href="#/createTask/{{category.id}}" ng-show="category.tasks.length > 0 || category.subCategories.length < 1">
+            <a class="edit-title left" href="#/createTask/{{category.id}}" ng-show="category.tasks.length > 0 || category.subCategories.length < 1" title="ایجاد وظیفه">
                 <i class="mdi edit teal-text white mdi-calendar-check"></i>
             </a>
         </div>
         <div class="row" ng-repeat="subCategory in category.subCategories" ng-if="category.subCategories">
             <label class="teal-text text-lighten-2" style="margin-right: 35px;">{{subCategory.title}}</label>
-            <a class="edit-title left" href="#/deleteCategory/{{subCategory.id}}">
+            <a class="edit-title left" href="#/deleteCategory/{{subCategory.id}}" title="حذف زیر دسته">
                 <i class="mdi edit teal-text white mdi-close"></i>
             </a>
-            <a class="edit-title left" href="#/editCategory/{{subCategory.id}}">
+            <a class="edit-title left" href="#/editCategory/{{subCategory.id}}" title="ویرایش زیر دسته">
                 <i class="mdi edit teal-text white mdi-pencil"></i>
             </a>
-            <a class="edit-title left" href="#/createTask/{{subCategory.id}}">
+            <a class="edit-title left" href="#/createTask/{{subCategory.id}}" title="ایجاد وظیفه">
                 <i class="mdi edit teal-text white mdi-calendar-check"></i>
             </a>
+
+            <div class="col s12">
+                <div class="row" ng-repeat="task in subCategory.tasks" style="margin-top: 1rem;">
+                    <hr class="checkpointer" ng-if="task.doneDate" />
+                    <div class="col 6 right" style="margin-top: 0.5rem; margin-right: 4rem;" ng-click="changeState(task)">
+                        <label class="task" ng-class="{ 'pointer': !isShared }">{{task.title}}</label>
+                    </div>
+                    <div class="col 2" style="line-height: 15px">
+                        <a class="btn" href="#/comment/{{task.id}}" title="ثبت توضیح">
+                            <i class="mdi mdi-comment-outline"></i>
+                        </a>
+                        <a class="btn" href="#/editTask/{{task.id}}" title="ویرایش وظیفه">
+                            <i class="mdi mdi-pencil"></i>
+                        </a>
+                        <a class="btn" href="#/deleteTask/{{task.id}}" title="حذف وظیفه">
+                            <i class="mdi mdi-close"></i>
+                        </a>
+                    </div>
+                    <div class="col 3" ng-click="changeState(task)">
+                        <label class="date" ng-class="{ 'pointer': !isShared }">{{task.dueDate | date : "yyyy/MM/dd"}}</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row left" ng-if="subCategory.tasks.maxPage > 1">
+                <ul class="pagination left">
+
+                    <li class="waves-effect" ng-class="{ 'disabled': subCategory.tasks.currentPage == (subCategory.tasks.maxPage - 1) }">
+                        <a href="#" ng-click="loadTasks(subCategory, subCategory.tasks.maxPage - 1)" ng-disabled="subCategory.tasks.currentPage == (subCategory.tasks.maxPage - 1)"><i class="mdi mdi-chevron-right"></i></a>
+                    </li>
+
+                    <li class="waves-effect" ng-class="{ 'disabled': subCategory.task.currentPage == i }" ng-repeat="i in category.tasks.pages track by $index">
+                        <a href="#" ng-click="loadTasks(subCategory, i)" ng-disabled="subCategory.task.currentPage == i">{{ i + 1 }}</a>
+                    </li>
+
+                    <li class="waves-effect" ng-class="{ 'disabled': subCategory.tasks.currentPage == 0 }">
+                        <a href="#" ng-click="loadTasks(subCategory, 0)" ng-disabled="subCategory.tasks.currentPage == 0"><i class="mdi mdi-chevron-left"></i></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="clearfix"></div>
         </div>
-        <div class="row {{task.doneDate ? 'checked' : ''}}"
-             ng-repeat="task in category.tasks">
-            <hr class="checkpointer">
-            <div class="col l1 right custom-col" style="margin-top: 0.5rem">
-                <input type="checkbox" ng-change="alert('hi')" />
+        <div class="row" ng-repeat="task in category.tasks">
+            <hr class="checkpointer" ng-if="task.doneDate" />
+            <div class="col 7 right" style="margin-top: 0.5rem" ng-click="changeState(task)">
+                <label class="task" ng-class="{ 'pointer': !isShared }">{{task.title}}</label>
             </div>
-            <div class="col 6 right" style="line-height:30px">
-                <label class="task">{{task.title}}</label>
+            <div class="col 2" style="line-height: 15px">
+                <a class="btn" href="#/comment/{{task.id}}" title="ثبت توضیح">
+                    <i class="mdi mdi-comment-outline"></i>
+                </a>
+                <a class="btn" href="#/editTask/{{task.id}}" title="ویرایش وظیفه">
+                    <i class="mdi mdi-pencil"></i>
+                </a>
+                <a class="btn" href="#/deleteTask/{{task.id}}" title="حذف وظیفه">
+                    <i class="mdi mdi-close"></i>
+                </a>
             </div>
-            <div class="col 2 " style="line-height: 15px">
-                <a class="btn" href="#/editTask/{{category.Id}}/{{task.id}}"><i class="mdi mdi-pencil"></i> </a>
-                <a class="btn" href="#/deleteTask/{{category.Id}}/{{task.id}}"><i class="mdi mdi-close"></i> </a>
-            </div>
-            <div class="col 3 ">
-                <label class="date">{{task.dueDate}}</label>
+            <div class="col 3" ng-click="changeState(task)">
+                <label class="date" ng-class="{ 'pointer': !isShared }">{{task.dueDate | date : "yyyy/MM/dd"}}</label>
             </div>
         </div>
+
+        <div class="row left" ng-if="category.tasks.maxPage > 1">
+            <ul class="pagination left">
+
+                <li class="waves-effect" ng-class="{ 'disabled': category.tasks.currentPage == (category.tasks.maxPage - 1) }">
+                    <a href="#" ng-click="loadTasks(category, category.tasks.maxPage - 1)" ng-disabled="category.tasks.currentPage == (category.tasks.maxPage - 1)"><i class="mdi mdi-chevron-right"></i></a>
+                </li>
+
+                <li class="waves-effect" ng-class="{ 'disabled': category.task.currentPage == i }" ng-repeat="i in category.tasks.pages track by $index">
+                    <a href="#" ng-click="loadTasks(category, i)" ng-disabled="category.task.currentPage == i">{{ i + 1 }}</a>
+                </li>
+
+                <li class="waves-effect" ng-class="{ 'disabled': category.tasks.currentPage == 0 }">
+                    <a href="#" ng-click="loadTasks(category, 0)" ng-disabled="category.tasks.currentPage == 0"><i class="mdi mdi-chevron-left"></i></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="clearfix"></div>
 
         <hr />
     </div>
-    <!--<div class="row">
-        <ul class="pagination left">
-            <li class="waves-effect"><a href="#!"><i class="mdi mdi-chevron-right"></i></a></li>
-
-            <li class="waves-effect"><a href="#!">5</a></li>
-            <li class="waves-effect"><a href="#!">4</a></li>
-            <li class="waves-effect"><a href="#!">3</a></li>
-            <li class="waves-effect"><a href="#!">2</a></li>
-            <li class="active"><a href="#!">1</a></li>
-            <li class="disabled"><a href="#!"><i class="mdi mdi-chevron-left"></i></a></li>
-        </ul>
-    </div>-->
 </div>
 
-<a class="btn btn-floating btn-large waves-effect waves-light red plus ng-scope" href="#/createCategory" style="margin-right: 30px;">
+<a class="btn btn-floating btn-large waves-effect waves-light red plus ng-scope" href="#/createCategory" style="margin-right: 30px; font-size: 3rem;">
     +
 </a>

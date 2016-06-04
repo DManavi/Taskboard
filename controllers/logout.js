@@ -2,11 +2,11 @@
 
     "use strict";
 
-    app.controller("logoutCtrl", ["$location", "$http", "$scope", "$rootScope", "constant",
-        function ($location, $http, $scope, $rootScope, constant) {
+    app.controller("logoutCtrl", ["$location", "$http", "$scope", "$rootScope", "constant", "$window",
+        function ($location, $http, $scope, $rootScope, constant, $window) {
 
             $scope.showDashboard = function () {
-                $location.path('/dashboard');
+                $window.history.back();
             };
 
             $scope.logout = function () {

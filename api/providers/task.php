@@ -30,8 +30,24 @@ function task_create($userId, $model) {
         return $output;
     }
 
+    // set default assigned to current user
+    $assignedTo = $userId;
+
+    if(isset($model->assignedTo)) {
+
+        // get user id by email address
+        $assignedTo = account_get_id($model->assignedTo);
+
+        // if requested user not found in database
+        if(!isset($assignedTo)) {
+
+            // set assigned to to current user
+            $assignedTo = $userId;
+        }
+    }
+
     // execute insert query
-    $count = db_execute('INSERT INTO task (title, dueDate, categoryId) VALUES (\''.$model->title.'\',\''.$model->dueDate.'\','.$model->categoryId.')');
+    $count = db_execute('INSERT INTO task (title, dueDate, categoryId, assignedTo) VALUES (\''.$model->title.'\',\''.$model->dueDate.'\','.$model->categoryId.', '.$assignedTo.')');
 
     // if query executed successfully
     if($count == 1) {
@@ -82,6 +98,8 @@ function task_read($userId, $categoryId, $pageSize, $pageIndex) {
 
     $query = 'SELECT id, title, dueDate, doneDate FROM task WHERE categoryId='.$categoryId.' LIMIT '.$skip.','.$pageSize;
 
+    $count = db_select_scalar('SELECT COUNT(ID) FROM task WHERE categoryId='.$categoryId);
+
     // search for categories of the user
     $result = db_select($query);
 
@@ -91,7 +109,10 @@ function task_read($userId, $categoryId, $pageSize, $pageIndex) {
         array_push($tasks, $row);
     }
 
-    $output['content'] = $tasks;
+    $output['content'] = [
+        'items' => $tasks,
+        'total' => $count
+    ];
 
     // return output to the caller
     return $output;
@@ -114,7 +135,16 @@ function task_update($userId, $model) {
     // check user access
     if(task_has_access($userId, $model->id)) {
 
-        $query = 'UPDATE task SET title=\''.$model->title.'\', categoryId='.$model->categoryId.', dueDate=\''.$model->dueDate.'\'';
+        // set default assigned to current user
+        $assignedTo = $userId;
+
+        if(isset($model->assignedTo)) {
+
+            // set assigned to requested user id
+            $assignedTo = $model->assignedTo;
+        }
+
+        $query = 'UPDATE task SET title=\''.$model->title.'\', categoryId='.$model->categoryId.', dueDate=\''.$model->dueDate.'\', assignedTo='. $assignedTo;
 
         // done date
         $doneDate = null;

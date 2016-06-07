@@ -34,15 +34,36 @@
                     $http({
                         method: "GET",
                         url: constant.API.category.list,
+                        params: {
+                            id: $stateParams.id
+                        }
                     })
                         .success(function (data, status, headers, config) {
 
-                            $scope.model = data.filter(function(obj){
-                                return obj.id == $stateParams.id;
-                            })[0];
+                            // assign data to scope model
+                            $scope.model = data;
                         })
                         .error(function (data, status, headers, config) {
-                            Materialize.toast("در هنگام بار گذاری صفحه خطایی رخ داده است", 5000);
+
+                            switch (status) {
+
+                                case 403:
+                                {
+
+                                    Materialize.toast("دسترسی امکان پذیر نیست", 5000);
+
+                                    break;
+                                }
+
+                                default:
+                                {
+
+                                    Materialize.toast("خطا در به روز رسانی دسته بندی، لطفا مجددا تلاش نمایید.", 5000);
+
+                                    break;
+                                }
+                            }
+
                         });
                 }
                 else if ($location.path().indexOf('/createSubCategory') == 0) {

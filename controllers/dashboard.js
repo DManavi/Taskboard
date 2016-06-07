@@ -19,13 +19,16 @@
                     }
                 };
 
-                // $filter('filter')(array, {id: 12})[0];
-
                 $http({
                     method: "GET",
                     url: constant.API.category.list,
                 })
                     .success(function (data, status, headers, config) {
+
+                        for(var i = 0; i < data.length; i++) {
+
+                            data[i].shared = data[i].shared == "1" ? true : false;
+                        }
 
                         var parents = data.filter(function(obj) {
 
@@ -88,7 +91,54 @@
 
                 $scope.changeState = function(task) {
 
-                    alert(task.title);
+                    // if task is a shared task
+                    if(task.isShared) {
+
+                        // go to task details
+                        $location.path("/readTask/" + task.id);
+
+                        return;
+                    }
+
+                    $http({
+                        method: "GET",
+                        url: constant.API.task.toggleStatus,
+                        params: {
+                            id: task.id,
+                        }
+                    })
+                        .success(function (data, status, headers, config) {
+
+                            if(data.doneDate) {
+
+                                task.doneDate = new Date(data.doneDate);
+                            }
+                            else {
+
+                                task.doneDate = null;
+                            }
+                        })
+                        .error(function (data, status, headers, config) {
+
+                            switch (status) {
+
+                                case 403:
+                                {
+
+                                    Materialize.toast("دسترسی امکان پذیر نیست", 5000);
+
+                                    break;
+                                }
+
+                                default:
+                                {
+
+                                    Materialize.toast("خطا در ایجاد وظیفه، لطفا مجددا تلاش نمایید.", 5000);
+
+                                    break;
+                                }
+                            }
+                        });
                 };
 
                 $scope.loadTasks = function(category, pageIndex, pageSize) {
@@ -96,8 +146,6 @@
                     if(!pageSize) { pageSize = 5; }
 
                     if(!pageIndex) { pageIndex = 0; }
-
-                    console.log(category);
 
                     if(category.tasks.currentPage && (category.tasks.currentPage == pageIndex)) { return; }
 
@@ -136,12 +184,28 @@
 
                             category.tasks.pages.reverse();
 
-                            console.log(category.tasks.pages);
-
                             category.tasks.currentPage = pageIndex;
                         })
                         .error(function (data, status, headers, config) {
-                            Materialize.toast("در هنگام بار گذاری صفحه خطایی رخ داده است", 5000);
+
+                            switch (status) {
+
+                                case 403:
+                                {
+
+                                    Materialize.toast("دسترسی امکان پذیر نیست", 5000);
+
+                                    break;
+                                }
+
+                                default:
+                                {
+
+                                    Materialize.toast("خطا در بارگذاری اطلاعات از سرور.", 5000);
+
+                                    break;
+                                }
+                            }
                         });
                 };
             }

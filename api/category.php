@@ -98,14 +98,58 @@ if($user["loggedIn"]) {
 
             case "read": {
 
-                // read all categories of the user
-                $result = category_read($user['userId']);
+                // try to get id from uri
+                $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : null;
 
-                // write content to body
-                http_set_body($result['content']);
+                // if single read requested
+                if(isset($id)){
 
-                // send HTTP 200 status
-                http_response_code(200);
+                    // read all categories of the user
+                    $result = category_read_single($user['userId'], $id);
+
+                    // check result status
+                    switch($result['status']) {
+
+                        // done
+                        case 0: {
+
+                            // write content to body
+                            http_set_body($result['content']);
+
+                            // send HTTP 200 status
+                            http_response_code(200);
+
+                            break;
+                        }
+
+                        // forbidden
+                        case 1: {
+
+                            // send HTTP 403 - forbidden
+                            http_response_code(403);
+
+                            break;
+                        }
+
+                        default: {
+
+                            // send HTTP 400 - bad request
+                            http_response_code(400);
+
+                            break;
+                        }
+                    }
+                }
+                else {
+                    // read all categories of the user
+                    $result = category_read_list($user['userId']);
+
+                    // write content to body
+                    http_set_body($result['content']);
+
+                    // send HTTP 200 status
+                    http_response_code(200);
+                }
 
                 break;
             }

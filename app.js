@@ -53,16 +53,22 @@
             },
             task: {
                 get list() {
-                    return "http://localhost:8080/taskboard/api/task.php?action=read";
+                    return "http://localhost:8080/taskboard/api/task.php?action=list";
                 },
                 get create() {
                     return "http://localhost:8080/taskboard/api/task.php?action=create";
+                },
+                get read() {
+                    return "http://localhost:8080/taskboard/api/task.php?action=read";
                 },
                 get delete () {
                     return "http://localhost:8080/taskboard/api/task.php?action=delete&id=";
                 },
                 get update() {
                     return "http://localhost:8080/taskboard/api/task.php?action=update";
+                },
+                get toggleStatus() {
+                    return "http://localhost:8080/taskboard/api/task.php?action=status";
                 }
             },
             profile: {
@@ -186,12 +192,20 @@
                     controller: 'taskCtrl'
                 })
 
+                .state('root.readTask', {
+                    key: "task",
+                    url: '/readTask/:id',
+                    title: "Read task",
+                    templateUrl: "./templates/task_read.html",
+                    controller: 'taskReadCtrl'
+                })
+
                 .state('root.editTask', {
                     key: "task",
-                    url: '/editTask/:parentId/:id',
+                    url: '/editTask/:id',
                     title: "Edit task",
                     templateUrl: "./templates/task.html",
-                    controller: 'editCtrl'
+                    controller: 'taskCtrl'
                 })
 
                 .state('root.deleteTask', {
@@ -201,8 +215,6 @@
                     templateUrl: "./templates/task_delete.html",
                     controller: 'taskDeleteCtrl'
                 })
-
-            // $locationProvider.html5Mode(true);
         }
     ])
 

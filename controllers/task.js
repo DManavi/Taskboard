@@ -39,7 +39,26 @@
                             $scope.model = data;
                         })
                         .error(function (data, status, headers, config) {
-                            Materialize.toast("در هنگام بار گذاری صفحه خطایی رخ داده است", 5000);
+
+                            switch (status) {
+
+                                case 403:
+                                {
+
+                                    Materialize.toast("دسترسی امکان پذیر نیست", 5000);
+
+                                    break;
+                                }
+
+                                default:
+                                {
+
+                                    Materialize.toast("خطا در ایجاد وظیفه، لطفا مجددا تلاش نمایید.", 5000);
+
+                                    break;
+                                }
+                            }
+
                         });
                 }
 
@@ -88,17 +107,36 @@
                     else if ($scope.actionType == 1) {
                         $http({
                             method: "PUT",
-                            url: constant.API.category.update,
+                            url: constant.API.task.update,
                             data: model
                         })
                             .success(function (data, status, headers, config) {
 
-                                Materialize.toast("دسته بندی با موفقیت به روز رسانی شد.", 5000);
+                                Materialize.toast("وظیفه با موفقیت به روز رسانی شد", 5000);
 
                                 $location.path("/dashboard");
                             })
                             .error(function (data, status, headers, config) {
-                                Materialize.toast("در بروزرسانی دسته بندی خطایی رخ داده است", 5000);
+
+                                switch (status) {
+
+                                    case 403:
+                                    {
+
+                                        Materialize.toast("دسترسی امکان پذیر نیست", 5000);
+
+                                        break;
+                                    }
+
+                                    default:
+                                    {
+
+                                        Materialize.toast("خطا در ایجاد وظیفه، لطفا مجددا تلاش نمایید.", 5000);
+
+                                        break;
+                                    }
+                                }
+
                             });
                     }
                 };
@@ -152,6 +190,59 @@
                         });
                 };
 
+            }
+        }]);
+
+    app.controller("taskReadCtrl", ["$location", "$http", "$scope", "$rootScope", "constant", "$cookies", "$stateParams",
+        function ($location, $http, $scope, $rootScope, constant, $cookies, $stateParams) {
+
+            if (!$cookies.get("auth")) {
+
+                $location.path("/login");
+            }
+            else {
+
+                $scope.showDashboard = function () {
+                    $location.path('/dashboard');
+                };
+
+                $scope.submit = function () {
+
+                };
+
+                $http({
+                    method: "GET",
+                    url: constant.API.task.read,
+                    params: {
+                        id: $stateParams.id
+                    }
+                })
+                    .success(function (data, status, headers, config) {
+
+                        // assign data to scope model
+                        $scope.model = data;
+                    })
+                    .error(function (data, status, headers, config) {
+
+                        switch (status) {
+
+                            case 403:
+                            {
+
+                                Materialize.toast("دسترسی امکان پذیر نیست", 5000);
+
+                                break;
+                            }
+
+                            default:
+                            {
+
+                                Materialize.toast("خطا در به روز رسانی دسته بندی، لطفا مجددا تلاش نمایید.", 5000);
+
+                                break;
+                            }
+                        }
+                    });
             }
         }]);
 

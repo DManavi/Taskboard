@@ -72,7 +72,7 @@ function category_create($userId, $model) {
     return $output;
 }
 
-function category_read($userId) {
+function category_read_list($userId) {
 
     if(!is_numeric($userId)) { $userId = intval($userId); }
 
@@ -80,8 +80,8 @@ function category_read($userId) {
         "status" => 0
     ];
 
-    // search for categories of the user
-    $result = db_select('SELECT id, title, parentId FROM category WHERE userId='.$userId.' ORDER BY title ASC');
+    // search for categories of the user or the categories that shared with
+    $result = db_select('SELECT category.id, category.title, category.parentId, (category.UserId!='.$userId.') AS shared FROM category LEFT OUTER JOIN task on category.Id=task.CategoryId WHERE category.UserId='.$userId.' OR task.AssignedTo='.$userId.' GROUP BY category.Id ORDER BY category.title ASC');
 
     $categories = [];
 
@@ -89,7 +89,60 @@ function category_read($userId) {
         array_push($categories, $row);
     }
 
+    // iterate all categories
+    for($i = 0; $i < sizeof($categories); $i++) {
+
+        // if category is shared, reset parent id
+        if($categories[$i]['shared']) {
+
+            // set parent id to null
+            $categories[$i]['parentId'] = null;
+        }
+    }
+
     $output['content'] = $categories;
+
+    // return output to the caller
+    return $output;
+}
+
+function category_read_single($userId, $categoryId) {
+
+    if(!is_numeric($userId)) { $userId = intval($userId); }
+
+    $output = [
+        "status" => 255
+    ];
+
+    // if user id isn't in numeric format
+    if(!is_numeric($userId)){
+
+        // cast userId to integer
+        $userId = intval($userId);
+    }
+
+    // if category id isn't in numeric format
+    if(!is_numeric($categoryId)){
+
+        // cast userId to integer
+        $categoryId = intval($categoryId);
+    }
+
+    // check user access
+    if(category_has_access($userId, $categoryId)) {
+
+        // set forbidden status
+        $output['status'] = 0;
+
+        $result = db_select('SELECT id, title, parentId FROM category WHERE id='.$categoryId);
+
+        $output['content'] = $result->fetch_assoc();
+    }
+    else {
+
+        // set forbidden status
+        $output['status'] = 1;
+    }
 
     // return output to the caller
     return $output;
@@ -201,6 +254,18 @@ function category_has_access($userId, $categoryId) {
 
     // check parent id existence
     $exist = db_select_scalar('SELECT COUNT(*) FROM category WHERE id='.$categoryId.' AND userId='.$userId);
+
+    return $exist == 1;
+}
+
+function category_is_shared($userId, $categoryId) {
+
+    if(!is_numeric($userId)) { $userId = intval($userId); }
+
+    if(!is_numeric($categoryId)) { $categoryId = intval($categoryId); }
+
+    // check parent id existence
+    $exist = db_select_scalar('SELECT COUNT(*) FROM category INNER JOIN task on task.CategoryId=category.Id WHERE task.AssignedTo='.$userId.' AND category.Id='.$categoryId);
 
     return $exist == 1;
 }

@@ -24,50 +24,50 @@
     <div ng-repeat="category in model.categories">
         <div class="row">
             <label class="teal-text text-lighten-2">{{category.title}}</label>
-            <a class="edit-title left" href="#/deleteCategory/{{category.id}}" title="حذف دسته بندی">
+            <a class="edit-title left" href="#/deleteCategory/{{category.id}}" ng-if="!category.shared" title="حذف دسته بندی">
                 <i class="mdi edit teal-text white mdi-close"></i>
             </a>
-            <a class="edit-title left" href="#/editCategory/{{category.id}}" title="ویرایش دسته بندی">
+            <a class="edit-title left" href="#/editCategory/{{category.id}}" ng-if="!category.shared" title="ویرایش دسته بندی">
                 <i class="mdi edit teal-text white mdi-pencil"></i>
             </a>
-            <a class="edit-title left" href="#/createSubCategory/{{category.id}}" ng-show="category.subCategories.length > 0 || category.tasks.length < 1" title="ایجاد زیر دسته">
+            <a class="edit-title left" href="#/createSubCategory/{{category.id}}" ng-if="!category.shared" ng-show="category.subCategories.length > 0 || category.tasks.length < 1" title="ایجاد زیر دسته">
                 <i class="mdi edit teal-text white mdi-content-duplicate"></i>
             </a>
-            <a class="edit-title left" href="#/createTask/{{category.id}}" ng-show="category.tasks.length > 0 || category.subCategories.length < 1" title="ایجاد وظیفه">
+            <a class="edit-title left" href="#/createTask/{{category.id}}" ng-if="!category.shared" ng-show="category.tasks.length > 0 || category.subCategories.length < 1" title="ایجاد وظیفه">
                 <i class="mdi edit teal-text white mdi-calendar-check"></i>
             </a>
         </div>
         <div class="row" ng-repeat="subCategory in category.subCategories" ng-if="category.subCategories">
             <label class="teal-text text-lighten-2" style="margin-right: 35px;">{{subCategory.title}}</label>
-            <a class="edit-title left" href="#/deleteCategory/{{subCategory.id}}" title="حذف زیر دسته">
+            <a class="edit-title left" href="#/deleteCategory/{{subCategory.id}}" ng-if="!category.isShared" title="حذف زیر دسته">
                 <i class="mdi edit teal-text white mdi-close"></i>
             </a>
-            <a class="edit-title left" href="#/editCategory/{{subCategory.id}}" title="ویرایش زیر دسته">
+            <a class="edit-title left" href="#/editCategory/{{subCategory.id}}" ng-if="!category.isShared" title="ویرایش زیر دسته">
                 <i class="mdi edit teal-text white mdi-pencil"></i>
             </a>
-            <a class="edit-title left" href="#/createTask/{{subCategory.id}}" title="ایجاد وظیفه">
+            <a class="edit-title left" href="#/createTask/{{subCategory.id}}" ng-if="!category.isShared" title="ایجاد وظیفه">
                 <i class="mdi edit teal-text white mdi-calendar-check"></i>
             </a>
 
             <div class="col s12">
-                <div class="row" ng-repeat="task in subCategory.tasks" style="margin-top: 1rem;">
+                <div class="row" ng-repeat="task in subCategory.tasks | orderBy: 'dueDate'" style="margin-top: 1rem;">
                     <hr class="checkpointer" ng-if="task.doneDate" />
                     <div class="col 6 right" style="margin-top: 0.5rem; margin-right: 4rem;" ng-click="changeState(task)">
                         <label class="task" ng-class="{ 'pointer': !isShared }">{{task.title}}</label>
                     </div>
                     <div class="col 2" style="line-height: 15px">
-                        <a class="btn" href="#/comment/{{task.id}}" title="ثبت توضیح">
+                        <a class="btn" href="#/readTask/{{task.id}}" title="جزئیات">
                             <i class="mdi mdi-comment-outline"></i>
                         </a>
-                        <a class="btn" href="#/editTask/{{task.id}}" title="ویرایش وظیفه">
+                        <a class="btn" href="#/editTask/{{task.id}}" ng-if="!task.isShared" title="ویرایش وظیفه">
                             <i class="mdi mdi-pencil"></i>
                         </a>
-                        <a class="btn" href="#/deleteTask/{{task.id}}" title="حذف وظیفه">
+                        <a class="btn" href="#/deleteTask/{{task.id}}" ng-if="!task.isShared" title="حذف وظیفه">
                             <i class="mdi mdi-close"></i>
                         </a>
                     </div>
                     <div class="col 3" ng-click="changeState(task)">
-                        <label class="date" ng-class="{ 'pointer': !isShared }">{{task.dueDate | date : "yyyy/MM/dd"}}</label>
+                        <label class="date" ng-class="{ 'pointer': !isShared }" style="position: relative; top: 0.7rem;">{{task.dueDate | date : "yyyy/MM/dd"}}</label>
                     </div>
                 </div>
             </div>
@@ -91,24 +91,24 @@
 
             <div class="clearfix"></div>
         </div>
-        <div class="row" ng-repeat="task in category.tasks">
+        <div class="row" ng-repeat="task in category.tasks | orderBy: 'dueDate'">
             <hr class="checkpointer" ng-if="task.doneDate" />
             <div class="col 7 right" style="margin-top: 0.5rem" ng-click="changeState(task)">
                 <label class="task" ng-class="{ 'pointer': !isShared }">{{task.title}}</label>
             </div>
             <div class="col 2" style="line-height: 15px">
-                <a class="btn" href="#/comment/{{task.id}}" title="ثبت توضیح">
+                <a class="btn" href="#/readTask/{{task.id}}" title="جزئیات">
                     <i class="mdi mdi-comment-outline"></i>
                 </a>
-                <a class="btn" href="#/editTask/{{task.id}}" title="ویرایش وظیفه">
+                <a class="btn" href="#/editTask/{{task.id}}" ng-if="!task.isShared" title="ویرایش وظیفه">
                     <i class="mdi mdi-pencil"></i>
                 </a>
-                <a class="btn" href="#/deleteTask/{{task.id}}" title="حذف وظیفه">
+                <a class="btn" href="#/deleteTask/{{task.id}}" ng-if="!task.isShared" title="حذف وظیفه">
                     <i class="mdi mdi-close"></i>
                 </a>
             </div>
             <div class="col 3" ng-click="changeState(task)">
-                <label class="date" ng-class="{ 'pointer': !isShared }">{{task.dueDate | date : "yyyy/MM/dd"}}</label>
+                <label class="date" ng-class="{ 'pointer': !isShared }" style="position: relative; top: 0.7rem;">{{task.dueDate | date : "yyyy/MM/dd"}}</label>
             </div>
         </div>
 

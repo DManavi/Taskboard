@@ -175,9 +175,9 @@ i.mdi-check {
 
 .index hr.checkpointer {
     position: relative;
-    top: 2rem;
-    right: 5rem;
-    margin-left: 14rem;
+    top: 2.6rem;
+    right: 2.5rem;
+    margin-left: 15rem;
 }
 
 .index i.edit {
@@ -288,4 +288,41 @@ span {
 
 .pointer {
     cursor: pointer;
+}
+
+
+
+.detail-card-img{
+    width: 5rem;
+    height: 5rem;
+    margin: 0.5rem 1rem;
+}
+
+.no-btm-margin{
+    margin-bottom: 0;
+}
+
+span.date{
+    margin: 1rem;
+    font-size: 1.5rem;
+}
+.comment{
+    font-family: yekan;
+    padding: 0px!important;
+}
+.comment-pic{
+    margin: 1.6rem 1rem;;
+    width: 5rem;
+    height: 5rem;
+}
+.comment p{
+    border-bottom: 1px solid silver;
+    padding: 1rem;
+    margin: 2rem 1rem!important;
+    font-size: 1.5rem;
+}
+
+.detail-img{
+    margin: 0.3rem 1rem;
+    width: 3.5rem;
 }

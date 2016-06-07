@@ -151,7 +151,13 @@ function validate_category_update($model) {
     if(isset($model)){
 
         // check if title isn't null &&
-        $output = isset($model->id) && isset($model->title) && strlen($model->title) <= 100 && strlen($model->title) > 0;
+        $output =
+            isset($model->id) &&
+            is_numeric($model->id) &&
+
+            isset($model->title) &&
+            strlen($model->title) <= 100 &&
+            strlen($model->title) > 0;
 
         // if parentId is present
         if(isset($model->parentId)) {
@@ -209,13 +215,6 @@ function validate_task_create($model) {
             // validate assigned to value
             $output &= filter_var($model->assignedTo, FILTER_VALIDATE_EMAIL) == $model->assignedTo;
         }
-
-        // if done date is set
-        if(isset($model->doneDate)) {
-
-            // validate done date
-            $output &= utils_is_date($model->doneDate);
-        }
     }
 
     // return output to the caller
@@ -228,10 +227,14 @@ function validate_task_update($model) {
     $output = false;
 
     // if model filled
-    if(isset($model)){
+    if(isset($model)) {
 
         // check if title isn't null && category id is a number
         $output =
+
+            isset($model->id) &&
+            is_numeric($model->id) &&
+
             strlen($model->title) <= 100 &&
             strlen($model->title) > 0 &&
 
@@ -243,20 +246,6 @@ function validate_task_update($model) {
 
             // validate assigned to value
             $output &= filter_var($model->assignedTo, FILTER_VALIDATE_EMAIL) == $model->assignedTo;
-        }
-
-        // if done date is set
-        if(isset($model->doneDate)) {
-
-            // validate done date
-            $output &= utils_is_date($model->doneDate);
-        }
-
-        // if assigned to provided
-        if(isset($model->assignedTo)) {
-
-            // validate assigned to value
-            $output &= is_numeric($model->assignedTo);
         }
     }
 

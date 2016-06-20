@@ -341,6 +341,77 @@ if($user["loggedIn"]) {
                 break;
             }
 
+            case "submit": {
+
+                // if method is put
+                if($method == 'put') {
+
+                    // try to get id from uri
+                    $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : null;
+
+                    // if id provided
+                    if (isset($id)) {
+
+                        // extract model from body
+                        $model = http_get_body();
+
+                        // validate model
+                        $invalidModel = !validate_model('task-submit', $model);
+
+                        // if model is valid
+                        if (!$invalidModel) {
+
+                            // try to update task
+                            $result = task_submit($user['userId'], $model);
+
+                            // check register result
+                            switch ($result["status"]) {
+
+                                // done
+                                case 0: {
+
+                                    // write updated content to output
+                                    http_set_body($result['content']);
+
+                                    // send HTTP 200
+                                    http_response_code(200);
+
+                                    break;
+                                }
+
+                                // access was denied
+                                case 1: {
+
+                                    // send HTTP 403 - forbidden
+                                    http_response_code(403);
+
+                                    break;
+                                }
+
+                                // unknown error
+                                case 255: {
+
+                                    // send internal server error
+                                    http_response_code(500);
+                                }
+                            }
+                        } else {
+
+                            // HTTP 400 - bad request
+                            http_response_code(400);
+                        }
+
+                    }
+                }
+                else {
+
+                    // set HTTP 405
+                    http_send_status(405);
+                }
+
+                break;
+            }
+
             case "delete": {
 
                 // if method is delete

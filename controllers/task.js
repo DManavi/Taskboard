@@ -36,7 +36,7 @@
                         .success(function (data, status, headers, config) {
 
                             // set data
-                            $scope.model = data;
+                            $scope.model = data.task;
                         })
                         .error(function (data, status, headers, config) {
 
@@ -105,6 +105,9 @@
                             });
                     }
                     else if ($scope.actionType == 1) {
+
+                        model.dueDate = model.dueDate.split(' ')[0];
+
                         $http({
                             method: "PUT",
                             url: constant.API.task.update,
@@ -210,6 +213,18 @@
 
                 };
 
+                $scope.readFile = function (input) {
+                    if (input.files && input.files[0]) {
+                        var FR = new FileReader();
+                        FR.onload = function (e) {
+                            $scope.model.answer = angular.copy(e.target.result);
+                            $scope.$apply(function (scope) {
+                            });
+                        };
+                        FR.readAsDataURL(input.files[0]);
+                    }
+                };
+
                 $http({
                     method: "GET",
                     url: constant.API.task.read,
@@ -218,6 +233,10 @@
                     }
                 })
                     .success(function (data, status, headers, config) {
+
+                        data.task.dueDate = new Date(data.task.dueDate);
+
+                        data.task.canAnswer = data.task.dueDate >= new Date();
 
                         // assign data to scope model
                         $scope.model = data;

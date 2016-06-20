@@ -17,41 +17,40 @@
             <div class="card-content right-align">
                 <p dir="rtl">{{ model.task.title }}</p>
             </div>
-
         </div>
     </div>
-    <div class="row" ng-if="model.task.isShared">
+    <div class="row" ng-if="model.task.canAnswer">
         <div class="card col l12">
             <div class="card-content">
                 <div class="input-field col s2">
-                    <input class="btn btn-large" type="button" ng-click="submit(model)" value="ارسال" />
+                    <input class="btn btn-large" type="button" ng-click="submit(model)" value="ارسال"  />
                 </div>
                 <div class="input-field col s10">
-                    <textarea dir="rtl" class="materialize-textarea" ng-model="model.comment" placeholder="توضیحات را وارد نمایید..."></textarea>
+                    <input type="file" accept="*/*" onchange="angular.element(this).scope().readImage(this)" required />
                 </div>
             </div>
         </div>
     </div>
-    <div class="row" ng-repeat="comment in model.comments | orderBy: 'date'">
-        <div class="card">
+    <!--<div class="row" ng-repeat="comment in model.comments | orderBy: 'date'">-->
+        <!--<div class="card">-->
 
-            <div class="card-content comment">
-                <div class="row no-btm-margin">
-                    <div class="col l11" dir="rtl">
-                        <p class="right-align">{{ comment.content }}</p>
-                    </div>
-                    <div class="col l1">
-                        <img ng-if="!comment.author.hasImage" src="./content/img/no-avatar.png" class="circle right detail-card-img ">
-                        <img ng-if="comment.author.hasImage" ng-src="{{ './content/img/' + comment.author.id + '.jpg' }}" class="circle right detail-card-img ">
-                    </div>
-                </div>
-                <div class="row ">
-                    <div class="col l12">
-                        <span class="date left">{{ comment.date | date: 'yyyy/MM/dd' }}</span>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="card-content comment">-->
+                <!--<div class="row no-btm-margin">-->
+                    <!--<div class="col l11" dir="rtl">-->
+                        <!--<p class="right-align">{{ comment.content }}</p>-->
+                    <!--</div>-->
+                    <!--<div class="col l1">-->
+                        <!--<img ng-if="!comment.author.hasImage" src="./content/img/no-avatar.png" class="circle right detail-card-img ">-->
+                        <!--<img ng-if="comment.author.hasImage" ng-src="{{ './content/img/' + comment.author.id + '.jpg' }}" class="circle right detail-card-img ">-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="row ">-->
+                    <!--<div class="col l12">-->
+                        <!--<span class="date left">{{ comment.date | date: 'yyyy/MM/dd' }}</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
-        </div>
-    </div>
+        <!--</div>-->
+    <!--</div>-->
 </div>

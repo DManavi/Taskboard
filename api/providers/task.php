@@ -172,6 +172,8 @@ function task_read_single($userId, $taskId) {
         // load task by id
         $task = db_select('SELECT task.id, task.title, task.dueDate, task.assignedTo, category.userId FROM task INNER JOIN category on task.categoryId=category.id WHERE task.id='.$taskId)->fetch_assoc();
 
+        $task['assignedTo'] = account_get_email($task['assignedTo']);
+
         $owner = profile_read($task['userId']);
 
         // load task comments
